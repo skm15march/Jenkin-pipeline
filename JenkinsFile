@@ -1,0 +1,43 @@
+node('master')
+{
+
+def mavenHome = tool name: "mvn3.6.3"
+
+stage('CheckoutCode')    
+{
+    git branch: 'development', credentialsId: '7bdd1b7c-ca08-4bc1-a5a1-57452444f933', url: 'https://github.com/skm15march/maven-web-project.git'
+}    
+    
+stage('Build')
+    {
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    
+stage('ExecuteSonarQubeReport')
+    {
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
+
+stage('UploadArtifactIntoNexus')
+    {
+        sh "${mavenHome}/bin/mvn deploy"
+    }
+
+stage('DeployAppIntoTomCatServer')
+{
+    sshagent(credentials: ['76b1d13b-59a2-4393-93a8-45a78836c030'], ignoreMissing: true)
+    {
+        sh "scp -o StrictHostKeyChecking=no target/mvn-web-application.war tomcat@ublinux:/opt/apache-tomcat-9.0.37/webapps/"
+    }
+}
+
+stage('SendEmailNotification')
+{
+    emailext body: '''Build is Over...
+
+Regards,
+ZoomIT Corp
+9987261114''', subject: 'Build is Over', to: 'skm15march'
+}
+
+}
