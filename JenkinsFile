@@ -13,7 +13,6 @@ stage('Build')
         sh "${mavenHome}/bin/mvn clean package"
     }
     
-/* 
 stage('ExecuteSonarQubeReport')
     {
         sh "${mavenHome}/bin/mvn sonar:sonar"
@@ -40,5 +39,5 @@ Regards,
 ZoomIT Corp
 9987261114''', subject: 'Build is Over', to: 'skm15march'
 }
-*/
+
 }
