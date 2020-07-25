@@ -27,7 +27,7 @@ stage('DeployAppIntoTomCatServer')
 {
     sshagent(credentials: ['76b1d13b-59a2-4393-93a8-45a78836c030'], ignoreMissing: true)
     {
-        sh "scp -o StrictHostKeyChecking=no target/mvn-web-application.war tomcat@ublinux:/opt/apache-tomcat-9.0.37/webapps/"
+        sh "cp target/mvn-web-application.war /opt/apache-tomcat-9.0.37/webapps/"
     }
 }
 
